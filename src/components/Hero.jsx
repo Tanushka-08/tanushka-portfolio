@@ -374,7 +374,7 @@ function ProfilePhoto({ imgError, setImgError }) {
       }}>
         {!imgError ? (
           <img
-            src="/profile.jpg"
+            src="./profile.jpg"
             alt="Tanushka Bhoir"
             onError={() => setImgError(true)}
             style={{
