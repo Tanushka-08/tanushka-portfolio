@@ -137,7 +137,9 @@ export default function Navbar({ theme, toggleTheme }) {
             {personalInfo.resumeUrl && (
               <a
                 href={personalInfo.resumeUrl}
-                download
+                download="Tanushka_Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="btn btn-primary"
                 style={{ padding: "7px 16px", fontSize: "0.82rem", gap: 6 }}
               >
@@ -211,7 +213,7 @@ export default function Navbar({ theme, toggleTheme }) {
             </button>
           ))}
           {personalInfo.resumeUrl && (
-            <a href={personalInfo.resumeUrl} download
+            <a href={personalInfo.resumeUrl} download="Tanushka_Resume.pdf" target="_blank" rel="noopener noreferrer"
               className="btn btn-primary" style={{ marginTop: 16, width: "100%", justifyContent: "center" }}>
               <FiDownload size={14} /> Download Resume
             </a>

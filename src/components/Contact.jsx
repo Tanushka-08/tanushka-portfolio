@@ -159,7 +159,9 @@ export default function Contact() {
             {personalInfo.resumeUrl && (
               <a
                 href={personalInfo.resumeUrl}
-                download
+                download="Tanushka_Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="reveal reveal-delay-4"
                 style={{
                   display: "flex", alignItems: "center", justifyContent: "center", gap: 8,

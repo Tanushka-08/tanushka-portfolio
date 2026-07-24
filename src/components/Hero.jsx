@@ -217,7 +217,7 @@ export default function Hero() {
               <span style={{ fontSize: "1rem" }}>→</span>
             </button>
             {personalInfo.resumeUrl ? (
-              <a href={personalInfo.resumeUrl} download className="btn btn-outline">
+              <a href={personalInfo.resumeUrl} download="Tanushka_Resume.pdf" target="_blank" rel="noopener noreferrer" className="btn btn-outline">
                 <FiDownload size={15} /> Download Resume
               </a>
             ) : (
