@@ -1,5 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;500&display=swap');
 
+@media (hover: hover) and (pointer: fine) {
+  * {
+    cursor: none !important;
+  }
+}
+
 /* ─── DESIGN TOKENS ───────────────────────────────────────────────── */
 :root {
   /* Signature palette: deep ink + electric violet + warm cream */
@@ -109,16 +115,32 @@
 /* ─── RESET ───────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; font-size: 16px; }
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  background: var(--bg-primary);
+}
 
 body {
   font-family: var(--font-body);
-  background: var(--bg-primary);
+  background: transparent; /* was var(--bg-primary) — now lets the fixed AnimatedBackground show through */
   color: var(--text-primary);
   line-height: 1.7;
   transition: background-color 0.4s ease, color 0.4s ease;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+}
+
+/* ─── GLOBAL BACKGROUND VISIBILITY OVERRIDE ─────────────────────────
+   Sections set solid inline backgrounds in JSX (e.g. Contact.jsx),
+   which normally beat any CSS rule. This override turns every
+   <section> inside <main> translucent using the existing --bg-glass
+   token, with a blur so text stays fully readable on top of the
+   AnimatedBackground glow behind it. */
+main section {
+  background: var(--bg-glass) !important;
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
 }
 
 /* ─── SCROLLBAR ───────────────────────────────────────────────────── */

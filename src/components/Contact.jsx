@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FiMail, FiGithub, FiLinkedin, FiMapPin, FiSend, FiDownload } from "react-icons/fi";
 import { personalInfo } from "../data/portfolioData";
 import { useScrollReveal } from "../hooks/useScrollReveal";
+import emailjs from "@emailjs/browser";
 
 const contactLinks = [
   {
@@ -40,19 +41,36 @@ const contactLinks = [
 
 export default function Contact() {
   const ref = useScrollReveal();
-  const [fields, setFields] = useState({ name: "", subject: "", message: "" });
-  const [sent, setSent] = useState(false);
+  const [fields, setFields] = useState({ name: "", email: "", subject: "", message: "" });
+  const [status, setStatus] = useState("idle"); // "idle" | "sending" | "sent" | "error"
 
   const handleChange = (e) => setFields(f => ({ ...f, [e.target.name]: e.target.value }));
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { name, subject, message } = fields;
-    const body = `Hi Tanushka,\n\n${message}\n\n— ${name}`;
-    const mailto = `mailto:${personalInfo.email}?subject=${encodeURIComponent(subject || `Portfolio message from ${name}`)}&body=${encodeURIComponent(body)}`;
-    window.location.href = mailto;
-    setSent(true);
-    setTimeout(() => setSent(false), 3000);
+    setStatus("sending");
+
+    emailjs.send(
+      import.meta.env.VITE_EMAILJS_SERVICE_ID,
+      import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+      {
+        name: fields.name,
+        email: fields.email,
+        subject: fields.subject,
+        message: fields.message,
+        time: new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" }),
+      },
+      import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+    )
+      .then(() => {
+        setStatus("sent");
+        setFields({ name: "", email: "", subject: "", message: "" });
+        setTimeout(() => setStatus("idle"), 4000);
+      })
+      .catch((error) => {
+        console.error("EmailJS error:", error);
+        setStatus("error");
+      });
   };
 
   const inputStyle = {
@@ -204,6 +222,7 @@ export default function Contact() {
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
               {[
                 { id: "name",    label: "Your Name",    placeholder: "Jane Smith",                         type: "text" },
+                { id: "email",   label: "Your Email",   placeholder: "jane@example.com",                   type: "email" },
                 { id: "subject", label: "Subject",      placeholder: "Internship / Collaboration / Hello", type: "text" },
               ].map(field => (
                 <div key={field.id}>
@@ -239,10 +258,22 @@ export default function Contact() {
                 />
               </div>
 
-              <button type="submit" className="btn btn-primary"
-                style={{ width: "100%", justifyContent: "center", gap: 8 }}>
-                {sent ? "✓ Opening your mail app..." : <><FiSend size={14} /> Send Message</>}
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={status === "sending"}
+                style={{ width: "100%", justifyContent: "center", gap: 8 }}
+              >
+                {status === "sending" ? "Sending..." :
+                 status === "sent" ? "✓ Message sent!" :
+                 <><FiSend size={14} /> Send Message</>}
               </button>
+
+              {status === "error" && (
+                <p style={{ color: "#dc2626", fontSize: "0.82rem", textAlign: "center", margin: 0 }}>
+                  Something went wrong — please try again or email me directly.
+                </p>
+              )}
             </form>
           </div>
         </div>
